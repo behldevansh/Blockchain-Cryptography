@@ -8,12 +8,12 @@ const messages = [
   {
     channel: "1",
     account: "0xcA8Fa8f0b631EcdB18Cda619C4Fc9d197c8aFfCa",
-    text: "Welcome!"
+    text: "Welcome to Dappcord!"
   },
   {
     channel: "2",
     account: "0xcA8Fa8f0b631EcdB18Cda619C4Fc9d197c8aFfCa",
-    text: "Welcome everyone! My name is John and I've been a blockchain developer for 2+ years."
+    text: "Welcome to Dappcord everyone! My name is John and I've been a blockchain developer for 2+ years."
   },
   {
     channel: "1",
