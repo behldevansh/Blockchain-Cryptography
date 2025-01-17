@@ -84,4 +84,30 @@ describe("Chat", function () {
     })
   })
 
+  describe("Withdrawing", () => {
+    const ID = 1
+    const AMOUNT = ethers.utils.parseUnits("10", 'ether')
+    let balanceBefore
+
+    beforeEach(async () => {
+      balanceBefore = await ethers.provider.getBalance(deployer.address)
+
+      let transaction = await chat.connect(user).mint(ID, { value: AMOUNT })
+      await transaction.wait()
+
+      transaction = await chat.connect(deployer).withdraw()
+      await transaction.wait()
+    })
+
+    it('Updates the owner balance', async () => {
+      const balanceAfter = await ethers.provider.getBalance(deployer.address)
+      expect(balanceAfter).to.be.greaterThan(balanceBefore)
+    })
+
+    it('Updates the contract balance', async () => {
+      const result = await ethers.provider.getBalance(chat.address)
+      expect(result).to.equal(0)
+    })
+  })
+
 });
