@@ -58,4 +58,30 @@ describe("Chat", function () {
       expect(channel.cost).to.be.equal(tokens(1));
     });
   });
+
+  describe("Joining Channels", () => {
+    const ID = 1
+    const AMOUNT = ethers.utils.parseUnits("1", 'ether')
+
+    beforeEach(async () => {
+      const transaction = await chat.connect(user).mint(ID, { value: AMOUNT })
+      await transaction.wait()
+    })
+
+    it('Joins the user', async () => {
+      const result = await chat.hasJoined(ID, user.address)
+      expect(result).to.be.equal(true)
+    })
+
+    it('Increases total supply', async () => {
+      const result = await chat.totalSupply()
+      expect(result).to.be.equal(ID)
+    })
+
+    it('Updates the contract balance', async () => {
+      const result = await ethers.provider.getBalance(chat.address)
+      expect(result).to.be.equal(AMOUNT)
+    })
+  })
+
 });
