@@ -13,10 +13,16 @@ describe("Chat", function () {
 
   beforeEach(async () => {
     // Setup accounts
-    [deployer, user] = await ethers.getSigners()
+    [deployer, user] = await ethers.getSigners();
 
     const Chat = await ethers.getContractFactory("Chat");
     chat = await Chat.deploy(NAME, SYMBOL);
+
+    // Create a channel
+    const transaction = await chat
+      .connect(deployer)
+      .createChannel("general", tokens(1));
+    await transaction.wait();
   });
 
   describe("Deployment", function () {
@@ -32,10 +38,24 @@ describe("Chat", function () {
       let result = await chat.symbol();
       // Check symbol
       expect(result).to.equal(SYMBOL);
-      it("Sets the owner", async () => {
-        const result = await chat.owner()
-        expect(result).to.equal(deployer.address)
-      })
+    });
+    it("Sets the owner", async () => {
+      const result = await chat.owner();
+      expect(result).to.equal(deployer.address);
+    });
+  });
+
+  describe("Creating Channels", () => {
+    it("Returns total channels", async () => {
+      const result = await chat.totalChannels();
+      expect(result).to.be.equal(1);
+    });
+
+    it("Returns channel attributes", async () => {
+      const channel = await chat.getChannel(1);
+      expect(channel.id).to.be.equal(1);
+      expect(channel.name).to.be.equal("general");
+      expect(channel.cost).to.be.equal(tokens(1));
     });
   });
 });
